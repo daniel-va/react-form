@@ -23,5 +23,9 @@ const config = {
     commonjs(),
     typescript(),
   ],
+  external: [
+    'react',
+    'react-dom',
+  ],
 }
 export default config

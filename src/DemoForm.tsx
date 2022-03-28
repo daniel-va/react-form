@@ -11,6 +11,7 @@ const DemoForm = () => {
   const form = useForm<Person>(() => ({
     name: '',
     age: 0,
+    mood: null,
   }))
 
   useValidate(form, (validate) => ({
@@ -19,6 +20,9 @@ const DemoForm = () => {
     ],
     age: [
       (age) => age >= 0 || 'darf nicht negativ sein',
+    ],
+    mood: [
+      validate.notNull(),
     ],
   }))
 
@@ -49,6 +53,18 @@ const DemoForm = () => {
           </div>
         </div>
       )}</FormField>
+
+      <FormField field={form.mood}>{({ value, onChange, errors }) => (
+        <div>
+          <div>
+            {value ?? 'null'}
+          </div>
+          <input value={value ?? ''} type="string" onChange={(e) => onChange(e.target.value.length === 0 ? null : e.target.value)} />
+          <div>
+            {errors.map((error) => <div key={error}>{error}</div>)}
+          </div>
+        </div>
+      )}</FormField>
       <Buttons />
     </Form>
   )
@@ -58,6 +74,7 @@ export default DemoForm
 interface Person {
   name: string
   age: number
+  mood: string | null
 }
 
 const Buttons = () => {
