@@ -1,25 +1,25 @@
 import React, { createContext } from 'react'
 import { Locale, localeEN } from '../data/locale'
 
-interface GlobalFormState {
+interface FormConfig {
   locale: Locale
 }
 
-const defaultState: GlobalFormState = {
+const defaultState: FormConfig = {
   locale: localeEN,
 }
 
-export const GlobalFormContext = createContext<GlobalFormState>({ ...defaultState })
+export const FormConfigContext = createContext<FormConfig>({ ...defaultState })
 
 interface Props {
-  value: Partial<GlobalFormState>
+  value: Partial<FormConfig>
 }
 
 export const FormConfigProvider: React.FC<Props> = ({ value, children }) => {
   return (
-    <GlobalFormContext.Provider value={{ ...defaultState, ...value }}>
+    <FormConfigContext.Provider value={{ ...defaultState, ...value }}>
       {children}
-    </GlobalFormContext.Provider>
+    </FormConfigContext.Provider>
   )
 }
 
