@@ -25,16 +25,30 @@ export function useForm<T>(base: T | null | undefined, makeDefaultValue?: () => 
       submitListeners: [],
       cancelListeners: [],
 
-      reset() {
+      submit() {
         const { current: form } = formRef
-        form.currentValue = form.defaultValue
-        for (const key of Object.keys(form.fields)) {
-          const field = form.fields[key]
-          field.errors = []
-          field.hasChanged = false
+        if (!form.isValid) {
+          return
         }
-        form.isValid = false
+        form.submitListeners.forEach((listen) => listen(form.currentValue))
+        resetForm(form)
         forceUpdate()
+      },
+
+      cancel() {
+        const { current: form } = formRef
+        resetForm(form)
+        form.cancelListeners.forEach((listen) => listen())
+        forceUpdate()
+      },
+
+      validate() {
+        const { current: form } = formRef
+        const isValid = runValidators(form)
+        if (!isValid || !form.isValid) {
+          form.isValid = isValid
+          forceUpdate()
+        }
       },
     }
   }
@@ -66,21 +80,28 @@ const useDefaultValue = <T>(base: T | null | undefined | (() => T), makeDefaultV
 )
 
 const createInitialFields = <T>(defaultValue: T, getForm: () => FormState<T>, forceUpdate: () => void): FormStateFields<T> => {
-  const fields = {} as FormStateFields<T>
+  const fields = {
+    get [privateKey]() {
+      return getForm()
+    },
+  } as unknown as FormStateFields<T>
   for (const key of Object.keys(defaultValue)) {
     fields[key] = {
       get value() {
         return getForm().currentValue[key]
       },
       setValue(update) {
-        const { currentValue, fields } = getForm()
-        const newValue = applyUpdate(currentValue[key], update)
-        if (currentValue[key] === newValue) {
+        const form = getForm()
+        const newValue = applyUpdate(form.currentValue[key], update)
+        if (form.currentValue[key] === newValue) {
           return
         }
-        currentValue[key] = newValue
+        form.currentValue = {
+          ...form.currentValue,
+          [key]: newValue,
+        }
         fields[key].hasChanged = true
-        runValidators(currentValue, fields)
+        getForm().isValid = runValidators(form)
         forceUpdate()
       },
       hasChanged: false,
@@ -91,16 +112,35 @@ const createInitialFields = <T>(defaultValue: T, getForm: () => FormState<T>, fo
   return fields
 }
 
-const runValidators =  <T>(currentValue: T, fields: FormStateFields<T>) => {
-  for (const key of Object.keys(fields)) {
+const runValidators =  <T>(form: FormState<T>): boolean => {
+  let isValid = true
+  for (const key of Object.keys(form.fields)) {
     const errors = []
-    const field = fields[key]
+    const field = form.fields[key]
     for (const validate of field.validators) {
-      const result = validate(field.value, currentValue)
+      const result = validate(field.value, form.currentValue)
       if (result !== true) {
         errors.push(result)
       }
     }
+    isValid = isValid && errors.length === 0
     field.errors = errors
   }
+  return isValid
+}
+
+const privateKey = Symbol('form/private')
+
+export const extractFormState = <T>(fields: FormStateFields<T>): FormState<T> => (
+  fields[privateKey] as FormState<T>
+)
+
+const resetForm = <T,>(form: FormState<T>) => {
+  form.currentValue = form.defaultValue
+  for (const key of Object.keys(form.fields)) {
+    const field = form.fields[key]
+    field.errors = []
+    field.hasChanged = false
+  }
+  form.isValid = runValidators(form)
 }
