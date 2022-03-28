@@ -1,6 +1,6 @@
 {
   "name": "@daniel-va/react-form",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Opinionated forms for react, build on hooks.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
