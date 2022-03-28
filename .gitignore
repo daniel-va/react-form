@@ -1,5 +1,8 @@
 # Build directory
-lib/
+dist/
+
+# Rollup build cache
+.rollup.cache
 
 # Created by https://www.toptal.com/developers/gitignore/api/webstorm+iml,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=webstorm+iml,node

@@ -1,17 +1,13 @@
 {
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@typescript-eslint",
-    "functional"
+    "@typescript-eslint"
   ],
   "extends": [
     "eslint:recommended",
     "next/core-web-vitals",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:functional/external-recommended",
-    "plugin:functional/recommended",
-    "plugin:functional/stylistic"
+    "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
     // Require indentation of 2 spaces.
@@ -63,8 +59,5 @@
     // Allow children to be passed as prob.
     // This is almost a necessity if we want to pass function variables as children.
     "react/no-children-prop": "off"
-  },
-  "parserOptions": {
-    "project": "./tsconfig.json"
   }
 }
