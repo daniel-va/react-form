@@ -8,10 +8,10 @@ export function useForm<T>(base: T | null | undefined, makeDefaultValue?: () => 
   const defaultValue = useDefaultValue(base, makeDefaultValue)
 
   const [_, setUpdateValue] = useState({})
-  const forceUpdate = () => setUpdateValue({})
 
   const formRef = useRef<FormState<T>>(null as unknown as FormState<T>)
   if (formRef.current === null) {
+    const forceUpdate = () => setUpdateValue({})
     formRef.current = {
       currentValue: defaultValue,
       defaultValue,
@@ -30,7 +30,7 @@ export function useForm<T>(base: T | null | undefined, makeDefaultValue?: () => 
         if (!form.isValid) {
           return
         }
-        form.submitListeners.forEach((listen) => listen(form.currentValue))
+        form.submitListeners.forEach((listen) => listen !== null && listen(form.currentValue))
         resetForm(form)
         forceUpdate()
       },
@@ -38,7 +38,7 @@ export function useForm<T>(base: T | null | undefined, makeDefaultValue?: () => 
       cancel() {
         const { current: form } = formRef
         resetForm(form)
-        form.cancelListeners.forEach((listen) => listen())
+        form.cancelListeners.forEach((listen) => listen !== null && listen())
         forceUpdate()
       },
 

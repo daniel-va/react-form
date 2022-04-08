@@ -62,13 +62,17 @@ export interface FormState<T> extends FormActions {
 
   /**
    * Callbacks to invoke when the form is submitted.
+   *
+   * Listeners can be `null` when they have been unregistered already.
    */
-  submitListeners: Array<(value: T) => (void | Promise<void>)>
+  submitListeners: Array<((value: T) => (void | Promise<void>)) | null>
 
   /**
    * Callbacks to invoke when the form is cancelled.
+   *
+   * Listeners can be `null` when they have been unregistered already.
    */
-  cancelListeners: Array<() => (void | Promise<void>)>
+  cancelListeners: Array<(() => (void | Promise<void>)) | null>
 }
 
 /**

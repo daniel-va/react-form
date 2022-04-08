@@ -1,15 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FormStateFields } from '../data/states'
 import { extractFormState } from './useForm'
 
-export const useCancel = <T>(fields: FormStateFields<T>, callback: () => (void | Promise<void>), deps: unknown[] = []) => {
+export const useCancel = <T>(fields: FormStateFields<T>, callback: () => (void | Promise<void>)) => {
   const form = extractFormState(fields)
-  useEffect(() => {
-    form.cancelListeners.push(callback)
-    return () => {
-      const i = form.cancelListeners.indexOf(callback)
-      form.cancelListeners.slice(i, 1)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps)
+  const i = useMemo(() => form.cancelListeners.length, [form])
+  form.cancelListeners[i] = callback
+  useEffect(() => () => {
+    form.cancelListeners[i] = null
+  }, [form, i])
 }
