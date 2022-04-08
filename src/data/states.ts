@@ -99,6 +99,8 @@ export interface FormFieldState<T, K extends keyof T> {
    */
   hasChanged: boolean
 
+  isValid: boolean
+
   /**
    * The fields errors.
    * This value being empty indicates that the field is valid.

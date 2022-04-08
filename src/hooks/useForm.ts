@@ -90,6 +90,7 @@ const createInitialFields = <T>(defaultValue: T, getForm: () => FormState<T>, fo
       get value() {
         return getForm().currentValue[key]
       },
+      isValid: true,
       setValue(update) {
         const form = getForm()
         const newValue = applyUpdate(form.currentValue[key], update)
@@ -123,8 +124,9 @@ const runValidators =  <T>(form: FormState<T>): boolean => {
         errors.push(result)
       }
     }
-    isValid = isValid && errors.length === 0
+    field.isValid = errors.length === 0
     field.errors = errors
+    isValid = isValid && field.isValid
   }
   return isValid
 }
