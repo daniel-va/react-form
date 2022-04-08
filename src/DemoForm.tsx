@@ -36,18 +36,18 @@ const DemoForm = () => {
 
   return (
     <Form state={form}>
-      <FormField field={form.name}>{({ errors, ...props }) => (
+      <FormField field={form.name}>{({ value, onChange, errors }) => (
         <div>
-          <input {...props} type="text" onChange={(e) => props.onChange(e.target.value)} />
+          <input value={value ?? ''} type="text" onChange={(e) => onChange(e.target.value)} />
           <div>
             {errors.map((error) => <div key={error}>{error}</div>)}
           </div>
         </div>
       )}</FormField>
 
-      <FormField field={form.age}>{({ errors, ...props }) => (
+      <FormField field={form.age}>{({ value, onChange, errors }) => (
         <div>
-          <input {...props} type="number" onChange={(e) => props.onChange(e.target.valueAsNumber)} />
+          <input value={value ?? 0} type="number" onChange={(e) => onChange(e.target.valueAsNumber)} />
           <div>
             {errors.map((error) => <div key={error}>{error}</div>)}
           </div>
