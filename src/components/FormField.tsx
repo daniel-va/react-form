@@ -5,14 +5,14 @@ import { FormFieldState } from '../data/states'
 interface Props<T, K extends keyof T> {
   field: FormFieldState<T, K>
 
-  children: (props: InputProps<T[K]>) => ReactNode
+  children: (props: ChildProps<T, K>) => ReactNode
 }
 
 const FormField = <T, K extends keyof T>({
   field,
   children,
 }: Props<T, K>): JSX.Element => {
-  const inputProps: InputProps<T[K]> = useMemo(() => ({
+  const inputProps: ChildProps<T, K> = useMemo(() => ({
     value: field.value,
     errors: field.hasChanged ? field.errors : [],
     onChange: field.setValue,
@@ -24,3 +24,5 @@ const FormField = <T, K extends keyof T>({
   )
 }
 export default FormField
+
+type ChildProps<T, K extends keyof T> = Required<InputProps<T[K]>>
