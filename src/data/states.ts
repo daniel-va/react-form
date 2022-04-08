@@ -2,15 +2,20 @@ import { Updater } from './update'
 import { Validator } from './validate'
 
 /**
- * `FormActions` allows access to internal actions of a form.
+ * `FormState` allows access to internal state of a form.
  */
-export interface FormActions {
+export interface FormState {
   /**
    * Shows if the current value counts as valid.
    * Only valid forms can't be submitted.
    * An invalid form has at least one field with an invalid value.
    */
   isValid: boolean
+
+  /**
+   * Shows if the forms current value differs from its default value.
+   */
+  hasChanged: boolean
 
   /**
    * Resets the form fields and calls the {@link cancelListeners cancel listeners}.
@@ -34,9 +39,9 @@ export interface FormActions {
 }
 
 /**
- * `FormState` represents the root state of a form.
+ * `FormRootState` represents the root state of a form.
  */
-export interface FormState<T> extends FormActions {
+export interface FormRootState<T> extends FormState {
   /**
    * The forms current value.
    * It tracks changes, and is the single source of truth for input fields.
@@ -49,11 +54,6 @@ export interface FormState<T> extends FormActions {
    * and also be reset to it when the form gets submitted or cancelled.
    */
   defaultValue: T
-
-  /**
-   * Shows if the {@link value} differs from the forms {@link FormState.defaultValue default value}.
-   */
-  hasChanged: boolean
 
   /**
    * The state of all form fields.

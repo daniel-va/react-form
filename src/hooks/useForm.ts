@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { FormState, FormStateFields } from '../data/states'
+import { FormRootState, FormStateFields } from '../data/states'
 import { applyUpdate } from '../data/update'
 
 export function useForm<T>(makeDefaultValue: () => T): FormStateFields<T>
 export function useForm<T>(base: T | null | undefined, makeDefaultValue: () => T): FormStateFields<T>
-export function useForm<T>(base: T | null | undefined, makeDefaultValue?: () => T): FormStateFields<T> {
+export function useForm<T>(base?: T | null, makeDefaultValue?: () => T): FormStateFields<T> {
   const defaultValue = useDefaultValue(base, makeDefaultValue)
 
   const [_, setUpdateValue] = useState({})
 
-  const formRef = useRef<FormState<T>>(null as unknown as FormState<T>)
+  const formRef = useRef<FormRootState<T>>(null as unknown as FormRootState<T>)
   if (formRef.current === null) {
     const forceUpdate = () => setUpdateValue({})
     formRef.current = {
@@ -79,7 +79,7 @@ const useDefaultValue = <T>(base: T | null | undefined | (() => T), makeDefaultV
   }, [typeof base === 'function' ? null : base])
 )
 
-const createInitialFields = <T>(defaultValue: T, getForm: () => FormState<T>, forceUpdate: () => void): FormStateFields<T> => {
+const createInitialFields = <T>(defaultValue: T, getForm: () => FormRootState<T>, forceUpdate: () => void): FormStateFields<T> => {
   const fields = {
     get [privateKey]() {
       return getForm()
@@ -113,7 +113,7 @@ const createInitialFields = <T>(defaultValue: T, getForm: () => FormState<T>, fo
   return fields
 }
 
-const runValidators =  <T>(form: FormState<T>): boolean => {
+const runValidators =  <T>(form: FormRootState<T>): boolean => {
   let isValid = true
   for (const key of Object.keys(form.fields)) {
     const errors = []
@@ -133,11 +133,11 @@ const runValidators =  <T>(form: FormState<T>): boolean => {
 
 const privateKey = Symbol('form/private')
 
-export const extractFormState = <T>(fields: FormStateFields<T>): FormState<T> => (
-  fields[privateKey] as FormState<T>
+export const extractFormState = <T>(fields: FormStateFields<T>): FormRootState<T> => (
+  fields[privateKey] as FormRootState<T>
 )
 
-const resetForm = <T,>(form: FormState<T>) => {
+const resetForm = <T,>(form: FormRootState<T>) => {
   form.currentValue = form.defaultValue
   for (const key of Object.keys(form.fields)) {
     const field = form.fields[key]

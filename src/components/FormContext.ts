@@ -1,8 +1,8 @@
 import { createContext } from 'react'
-import { FormState } from '../data/states'
+import { FormRootState } from '../data/states'
 
 interface FormContextState {
-  state: FormState<unknown> | null
+  state: FormRootState<unknown> | null
 }
 
 const FormContext = createContext<FormContextState>({

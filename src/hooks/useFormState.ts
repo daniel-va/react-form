@@ -1,10 +1,9 @@
 import { useContext, useMemo } from 'react'
 import FormContext from '../components/FormContext'
-import { FormActions, FormStateFields } from '../data/states'
+import { FormState, FormStateFields } from '../data/states'
 import { extractFormState } from './useForm'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useFormActions = (fields?: FormStateFields<any>): FormActions => {
+export const useFormState = <T>(fields?: FormStateFields<T>): FormState => {
   const context = useContext(FormContext)
   return useMemo(() => {
     const state = fields === undefined
@@ -17,9 +16,12 @@ export const useFormActions = (fields?: FormStateFields<any>): FormActions => {
       get isValid() {
         return state.isValid
       },
+      get hasChanged() {
+        return state.hasChanged
+      },
       submit: state.submit,
       cancel: state.cancel,
-      validate: state.validate,
+      validate: state.cancel,
     }
   }, [context, fields])
 }

@@ -3,7 +3,7 @@ import Form from './components/Form'
 import FormField from './components/FormField'
 import { useCancel } from './hooks/useCancel'
 import { useForm } from './hooks/useForm'
-import { useFormActions } from './hooks/useFormActions'
+import { useFormState } from './hooks/useFormState'
 import { useSubmit } from './hooks/useSubmit'
 import { useValidate } from './hooks/useValidate'
 
@@ -78,11 +78,11 @@ interface Person {
 }
 
 const Buttons = () => {
-  const { isValid, submit, cancel } = useFormActions()
+  const form = useFormState()
   return (
     <div>
-      <button type="button" onClick={submit} disabled={!isValid}>Bestätigen</button>
-      <button type="button" onClick={cancel}>Abbrechen</button>
+      <button type="button" onClick={form.submit} disabled={!form.isValid}>Bestätigen</button>
+      <button type="button" onClick={form.cancel}>Abbrechen</button>
     </div>
   )
 }
