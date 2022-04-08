@@ -1,6 +1,6 @@
 {
   "name": "@daniel-va/react-form",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Opinionated forms for react, build on hooks.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -11,7 +11,8 @@
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "lint": "eslint && tsc --noemit"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.3",
