@@ -7,12 +7,14 @@ export type { InputProps } from 'src/data/InputProps'
 export type { FormActions, FormStateFields, FormFieldState } from 'src/data/states'
 export type { Validator, Validators } from 'src/data/validate'
 export * from 'src/data/locale'
+export * from 'src/accessors'
 
 export { useForm } from 'src/hooks/useForm'
 export { useValidate } from 'src/hooks/useValidate'
 export { useSubmit } from 'src/hooks/useSubmit'
 export { useCancel } from 'src/hooks/useCancel'
 export { useFormActions } from 'src/hooks/useFormActions'
+
 
 /**
  * Utility method to initialise non-nullable values with `null`.
