@@ -19,9 +19,16 @@ export const useFormState = <T>(fields?: FormStateFields<T>): FormState => {
       get hasChanged() {
         return state.hasChanged
       },
+      get isSubmitting() {
+        return state.isSubmitting
+      },
+      get isCancelling() {
+        return state.isCancelling
+      },
       submit: state.submit,
       cancel: state.cancel,
       validate: state.cancel,
+      reset: state.reset,
     }
   }, [context, fields])
 }
