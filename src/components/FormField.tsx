@@ -15,7 +15,8 @@ const FormField = <T, K extends keyof T>({
   const inputProps: ChildProps<T, K> = useMemo(() => ({
     value: field.value,
     errors: field.hasChanged ? field.errors : [],
-    onChange: field.setValue,
+    onChange: (value) => field.setValue(value as T[K]),
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [field.value, field.hasChanged, field.errors, field.setValue])
   return (
     <React.Fragment>
