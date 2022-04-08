@@ -17,6 +17,8 @@ export function useForm<T>(base?: T | null, makeDefaultValue?: () => T): FormSta
       defaultValue,
       fields: createInitialFields(defaultValue, () => formRef.current, forceUpdate),
       isValid: false,
+      isSubmitting: false,
+      isCancelling: false,
 
       get hasChanged() {
         return formRef.current.currentValue !== formRef.current.defaultValue
@@ -30,15 +32,21 @@ export function useForm<T>(base?: T | null, makeDefaultValue?: () => T): FormSta
         if (!form.isValid) {
           return
         }
+        form.isSubmitting = true
+        forceUpdate()
         form.submitListeners.forEach((listen) => listen !== null && listen(form.currentValue))
+        form.isSubmitting = false
         resetForm(form)
         forceUpdate()
       },
 
       cancel() {
         const { current: form } = formRef
+        form.isCancelling = true
         resetForm(form)
+        forceUpdate()
         form.cancelListeners.forEach((listen) => listen !== null && listen())
+        form.isCancelling = false
         forceUpdate()
       },
 
@@ -49,6 +57,10 @@ export function useForm<T>(base?: T | null, makeDefaultValue?: () => T): FormSta
           form.isValid = isValid
           forceUpdate()
         }
+      },
+
+      reset() {
+        resetForm(formRef.current)
       },
     }
   }
@@ -137,7 +149,7 @@ export const extractFormState = <T>(fields: FormStateFields<T>): FormRootState<T
   fields[privateKey] as FormRootState<T>
 )
 
-const resetForm = <T,>(form: FormRootState<T>) => {
+const resetForm = <T>(form: FormRootState<T>) => {
   form.currentValue = form.defaultValue
   for (const key of Object.keys(form.fields)) {
     const field = form.fields[key]

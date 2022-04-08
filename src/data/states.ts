@@ -18,6 +18,16 @@ export interface FormState {
   hasChanged: boolean
 
   /**
+   * Shows if the form is currently being submitted.
+   */
+  isSubmitting: boolean
+
+  /**
+   * Shows if the form is currently being cancelled.
+   */
+  isCancelling: boolean
+
+  /**
    * Resets the form fields and calls the {@link cancelListeners cancel listeners}.
    * Note that validators and listeners do not get unregistered on cancel.
    */
@@ -36,6 +46,11 @@ export interface FormState {
    * Rerun validators.
    */
   validate(): void
+
+  /**
+   * Resets the form to its default state.
+   */
+  reset(): void
 }
 
 /**
