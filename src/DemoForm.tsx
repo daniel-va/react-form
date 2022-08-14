@@ -1,3 +1,4 @@
+import { createValidator, validate } from '@daniel-va/validate'
 import React from 'react'
 import Form from './components/Form'
 import FormField from './components/FormField'
@@ -7,14 +8,14 @@ import { useFormState } from './hooks/useFormState'
 import { useSubmit } from './hooks/useSubmit'
 import { useValidate } from './hooks/useValidate'
 
-const DemoForm = () => {
+const DemoForm: React.FC = () => {
   const form = useForm<Person>(() => ({
     name: '',
     age: 0,
     mood: null,
   }))
 
-  useValidate(form, (validate) => ({
+  useValidate(form, createValidator<Person>({
     name: [
       validate.notBlank(),
     ],

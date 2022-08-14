@@ -50,6 +50,7 @@ export function useForm<T>(base?: T | null, makeDefaultValue?: () => T): FormSta
         forceUpdate()
       },
 
+      validator: null,
       validate() {
         const { current: form } = formRef
         const isValid = runValidators(form)
@@ -119,28 +120,25 @@ const createInitialFields = <T>(defaultValue: T, getForm: () => FormRootState<T>
       },
       hasChanged: false,
       errors: [],
-      validators: [],
     }
   }
   return fields
 }
 
 const runValidators =  <T>(form: FormRootState<T>): boolean => {
-  let isValid = true
-  for (const key of Object.keys(form.fields)) {
-    const errors = []
-    const field = form.fields[key]
-    for (const validate of field.validators) {
-      const result = validate(field.value, form.currentValue)
-      if (result !== true) {
-        errors.push(result)
-      }
-    }
-    field.isValid = errors.length === 0
-    field.errors = errors
-    isValid = isValid && field.isValid
+  if (form.validator === null) {
+    return true
   }
-  return isValid
+  const result = form.validator(form.currentValue)
+  for (const field of Object.keys(result.fields)) {
+    const fieldResult = result.fields[field]
+    if ('fields' in fieldResult) {
+      throw new Error(`unexpected NestedValidatorResult for field '${field}'`)
+    }
+    form.fields[field].isValid = fieldResult.isValid
+    form.fields[field].errors = fieldResult.errors
+  }
+  return result.isValid
 }
 
 const privateKey = Symbol('form/private')

@@ -1,5 +1,5 @@
+import { Validator } from '@daniel-va/validate'
 import { Updater } from './update'
-import { Validator } from './validate'
 
 /**
  * `FormState` allows access to internal state of a form.
@@ -88,6 +88,13 @@ export interface FormRootState<T> extends FormState {
    * Listeners can be `null` when they have been unregistered already.
    */
   cancelListeners: Array<(() => (void | Promise<void>)) | null>
+
+  /**
+   * The validator for the form's value.
+   * Runs everytime a form value changes.
+   * Is `null` if no validator has been configured.
+   */
+  validator: Validator<T> | null
 }
 
 /**
@@ -121,10 +128,4 @@ export interface FormFieldState<T, K extends keyof T> {
    * This value being empty indicates that the field is valid.
    */
   errors: string[]
-
-  /**
-   * The validators for this field.
-   * Run whenever any form value changes.
-   */
-  validators: Validator<T, T[K]>[]
 }

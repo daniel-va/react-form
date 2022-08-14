@@ -1,12 +1,9 @@
 
 export { default as Form } from 'src/components/Form'
 export { default as FormField } from 'src/components/FormField'
-export { FormConfigProvider } from 'src/components/FormConfig'
 
 export type { InputProps } from 'src/data/InputProps'
 export type { FormState, FormStateFields, FormFieldState } from 'src/data/states'
-export type { Validator, Validators } from 'src/data/validate'
-export * from 'src/data/locale'
 
 export { useForm } from 'src/hooks/useForm'
 export { useFormState } from 'src/hooks/useFormState'
